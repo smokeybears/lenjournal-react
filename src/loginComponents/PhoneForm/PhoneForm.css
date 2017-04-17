@@ -1,0 +1,17 @@
+.phone {
+	font-size: 24px;
+	position: relative;
+}
+.phone > input {
+	letter-spacing: 5px;
+}
+
+.loading{
+  content: "";
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  right: -40px;
+	background-image: url('../PhoneForm/loading.svg');
+	/*visibility: hidden;*/
+}

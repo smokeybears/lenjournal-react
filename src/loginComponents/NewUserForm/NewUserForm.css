@@ -1,0 +1,38 @@
+.form-user-signup {
+	opacity: 1;
+	max-height: 300px;
+	font-size: 10px;
+	white-space: nowrap;
+}
+
+.form-user-signup input {
+	margin: 5%;
+}
+
+.newuserform-appear {
+  opacity: 0;
+  max-height: 0px;
+}
+
+.newuserform-appear.newuserform-appear-active {
+  opacity: 1;
+  max-height: 300px;
+  transition: all 500ms ease-in;
+}
+
+/*.newuserform-enter.newuserform-enter-active {
+  opacity: 1;
+  max-height: 300px;
+  transition: all 500ms ease-in;
+}
+
+.newuserform-leave {
+  opacity: 1;
+}
+
+.newuserform-leave.newuserform-leave-active {
+  opacity: 0.01;
+  max-height: 0;
+  transition: all 500ms ease-in;
+}
+*/

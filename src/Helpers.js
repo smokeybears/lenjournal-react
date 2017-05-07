@@ -1,31 +1,33 @@
-import cookie from 'react-cookie'
+import Cookies from 'react-cookie';
+import uuidV4 from 'uuid/v4';
 const Helpers = {
-	// checkStatus(response) {
-	// 	return Promise.resolve(response)
-	// },
-
 	getBody(response) {
 		return response.json()
 	},
 
-	formatPhoneNumber(pn) {
-		return pn 
+	formatPhone(phone) {
+		return `(${phone.slice(0, 3)})-${phone.slice(3, 6)}-${phone.slice(6, 10)}`
 	},
 
 	getSessionID(){
-		let sessionID = cookie.load('sessionID')
+		let sessionID = Cookies.load('sessionID')
 		if (!sessionID){
-			sessionID = '43'
-			// sessionID = Math.random().toString().slice(2, 8)
-			cookie.save('sessionID', 
-				sessionID, // without a doubt need to be more secure
+			let expires = new Date()
+			expires.setDate(expires.getDate() + 30) // cookies last a month
+			Cookies.save('sessionID', 
+				// could definitely but threat posed to this site is very small 
+				uuidV4(), 
 			{
 				path: '/',
-				expiresAt: new Date() + 7 * 24 * 60 * 60 // cookies last a week
+				expiresAt: expires
 			})
 		}
 		return sessionID
-	}
+	},
 
+	clearSessionCookie(){
+		Cookies.save('sessionID', '')	
+	}
 }
+
 export default Helpers

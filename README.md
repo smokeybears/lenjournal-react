@@ -1,0 +1,1 @@
+This is the frontend component for the lenjournal website. It's built with plain React. I decided to build the whole app from scratch to get a better idea of what is going on under the hood of create-react-app. 

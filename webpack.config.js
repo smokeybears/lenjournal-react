@@ -8,6 +8,15 @@ const webPackConfig = {
 		path: path.resolve(__dirname, 'build'),
 		filename: 'app.bundle.js'
 	},
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8090',
+        pathRewrite: {'^/api' : ''},
+        secure: false
+      }
+    }
+  },
 	module: {
 		loaders: [{
 				test: /jsx?$/,

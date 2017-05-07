@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
-import Helpers from '../../Helpers'
-import './PhoneVerificationForm.css'
-const BASEURL = 'http://localhost:8090'
+import Helpers from '../../../Helpers'
+import PhoneVerificationForm from './PhoneVerificationForm'
+
 class PhoneVerificationFormContainer extends Component {
 	constructor(props){
 		super(props)
 		this.state = {
 			validationCode:  ['', '', '', ''],
+			phone: props.phone,
 			checkingCode: false,
 			incorrectCode: false
 		}
@@ -14,16 +15,37 @@ class PhoneVerificationFormContainer extends Component {
 		this.liftState = 	props.stateLift
 	}
 
+	componentWillMount = () => {
+		fetch('/api/phone/validation', {
+			method: 'POST',
+			mode: 'cors',
+			credentials: 'include',
+			headers: new Headers({"content-type": "application/json"}),
+			body: JSON.stringify({
+				phone: this.state.phone
+			})
+		})
+		.then(Helpers.getBody)
+		.then(responseBody =>  {
+			if (!responseBody.codeCreated) {
+				// something went wrong
+			}
+		})
+		.catch(err => {
+			throw new Error(`${err}: Error creating verification code`)
+		})
+	}
+
 	checkPhoneCode = () => {
-		fetch(`${BASEURL}/phone/verify`, {
+		fetch('/api/phone/verify', {
 			method: 'PUT',
 			mode: 'cors',
+			credentials: 'include',
+			headers: new Headers({"content-type": "application/json"}),
 			body: JSON.stringify({
-				sessionID: Helpers.getSessionID(),
 				code: this.state.validationCode.join('')
 			})
 		})
-		.then(Helpers.checkStatus)
 		.then(Helpers.getBody)
 		.then(responseBody => {
 			if (responseBody.valid == true){
@@ -40,7 +62,6 @@ class PhoneVerificationFormContainer extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState){
-		// need to clean this up, bool logic is hard to follow, could perhaps be done better in onChange()
 		if (this.state.validationCode.join('').length === this.state.validationCode.length && this.updated){
 			this.setState({checkingCode: true})
 			this.checkPhoneCode()
@@ -68,23 +89,5 @@ class PhoneVerificationFormContainer extends Component {
 	}
 }
 
-let PhoneVerificationForm = (props) => {
-	return (
-			<div>
-				<div className="flex-row">
-					{props.code.map((val, idx) => <input type="text" name={idx.toString()} key={idx.toString()}
-									maxLength="1"
-									value={val} 
-									onChange={props.control}
-									disabled={props.checkingCode}
-									className="login-input conf"
-									></input>
-						)}
-					{props.checkingCode && <div className='loading' style={{right: "-44%"}}></div>}
-				</div>
-				{props.incorrectCode && <div className="error-text">Incorrect Verification Code</div>}
-			</div>
-		)
-}
 
 export default PhoneVerificationFormContainer
